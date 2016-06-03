@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/css/skeleton.css">
+<script src="/socket.io/socket.io.js"> </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js">
+	
+</script>
+
+    <script>
+    $( document ).ready(function() {
+    
+      //use http://raspberryPi.local if your using Avahi Service 
+          //or use your RasperryPi IP instead
+      var socket = io.connect('http://192.168.1.126:8080');
+      socket.on('connect', function(data){
+        socket.emit('remote');
+      });
+
+      $("#Hello").click(function() {
+		  console.log( "Handler for .click() called." );
+        	socket.emit('jsonAPI');
+        	$("#Hello").css("display","none")
+		});
+      socket.on('jsonAPIResponse', function(data){
+      	console.log(data);
+        var json_obj = data;//parse JSON
+
+            var output;
+            for (var i in json_obj) 
+            {
+            	
+				output += '<div class="row"> <div class="one column">' + 
+            	'<img src="'+json_obj[i].images.poster+'" alt="" height="90" width="62"/></div>' +
+                '<div class="eleven columns"> <a class="movieTitle" href="javascript:void(0);" data-id="'+json_obj[i]._id+'">' + json_obj[i].title + ',  ' + json_obj[i].year + '</a></div></div>';
+            }
+            
+            $('span').html(output);
+      });
+        $("#movieList").on("click",".movieTitle",function() {
+        	socket.emit('movieAPI', $(this).attr("data-id"));
+		});
+      
+	});
+    </script>
+    </head>
+<body>
+    <button id="Hello"> Hello World! </button>
+    <span id="movieList" class="container">	</span>
+</body>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+</html>

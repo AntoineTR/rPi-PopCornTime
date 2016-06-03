@@ -1,0 +1,13 @@
+<h1>Hello World!</h1>
+
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"> </script>
+    <script>
+      //use http://raspberryPi.local if your using Avahi Service 
+          //or use your RasperryPi IP instead
+      var socket = io.connect('http://192.168.1.126:8080');
+      socket.on('connect', function(data){
+        socket.emit('screen');
+      });
+    </script>
+
+
