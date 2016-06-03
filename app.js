@@ -88,11 +88,17 @@ socket.on("movieAPI", function(data){
 	    json: true
 	}, function (error, response, body) {
 		console.log(body);
-		var magnet = '"' + body.torrents['1080p'].url + '"';
+		console.log("=======");
+console.log(body.torrents.en);
+		var magnet = '"' + body.torrents.en['720p'].url + '"';
 		console.log(magnet);
 		if (!error && response.statusCode === 200) {
 	        //var runShell = new run_shell('peerflix',[magnet,' --vlc']);
-		    var ls = spawn('peerflix', ['magnet', '--vlc']);    
+		    var ls = spawn('peerflix', [magnet, '--omx', '--', '-b']);  
+		ls.stdout.on('data', function(data){	
+			console.log(data);
+		});
+		
       
 	    }
 	})
