@@ -29,13 +29,15 @@
           socket.emit('movieSearch', $("#SearchText").val());
 
 		  });
+      
       //Api Response to List View
       socket.on('jsonAPIResponse', function(data){
       	jsonConvert(data);
         
       });
-        $("#movieList").on("click",".movieTitle",function() {
-        	socket.emit('movieAPI', $(this).attr("data-id"));
+        $("#movieList").on("click",".movieQuality",function() {
+        	console.log($(this).attr("data-magnet"));
+          socket.emit('movieAPI', $(this).attr("data-magnet"));
 		});
       
 	});
