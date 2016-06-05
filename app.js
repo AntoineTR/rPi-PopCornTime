@@ -62,11 +62,11 @@ socket.on('disconnect', function(){
    socket.type = "remote";
    console.log("Remote ready...");
  });
-
+// First List 
  socket.on("jsonAPI", function(data){
    socket.type = "jsonAPI";
 
-	var url = "https://api-fetch.website/tv/movies/1"
+	var url = "https://api-fetch.website/tv/movies/1?Sort=Rating&order=-1"
 
 	request({
 	    url: url,
@@ -81,6 +81,28 @@ socket.on('disconnect', function(){
 	    }
 	})
  })
+
+//Search
+socket.on("movieSearch", function(data){
+   
+
+	var url = "https://api-fetch.website/tv/movies/1?keywords=" + data;
+
+	request({
+	    url: url,
+	    json: true
+	}, function (error, response, body) {
+
+	    if (!error && response.statusCode === 200) {
+	        socket.emit("jsonAPIResponse", body);
+	    }
+	    else{
+	    	console.log(error);
+	    }
+	})
+ })
+
+ //unused
 socket.on("movieAPI", function(data){
 	var url = "https://api-fetch.website/tv/movie/" + data;
 	request({

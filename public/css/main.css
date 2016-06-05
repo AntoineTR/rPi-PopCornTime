@@ -1,0 +1,15 @@
+body
+{
+	background-color: #8FA77A;
+	color: #273024;
+}
+input{
+	background-color: #ECE7E4; 
+}
+
+.movieRow{
+	border-top: 2px solid #273024;
+}
+.header{
+	padding-bottom: 25px;
+}
