@@ -102,19 +102,9 @@ socket.on("movieSearch", function(data){
 	})
  })
 
- //unused
 socket.on("movieAPI", function(data){
-	var url = "https://api-fetch.website/tv/movie/" + data;
-	request({
-	    url: url,
-	    json: true
-	}, function (error, response, body) {
-		console.log(body);
-		console.log("=======");
-console.log(body.torrents.en);
-		var magnet = '"' + body.torrents.en['720p'].url + '"';
+		var magnet = '"' + data + '"';
 		console.log(magnet);
-		if (!error && response.statusCode === 200) {
 	        //var runShell = new run_shell('peerflix',[magnet,' --vlc']);
 		    var ls = spawn('peerflix', [magnet, '--omx', '--', '-b']);  
 		ls.stdout.on('data', function(data){	
@@ -122,8 +112,8 @@ console.log(body.torrents.en);
 		});
 		
       
-	    }
-	})
+	    
+	
 })
 
 });
