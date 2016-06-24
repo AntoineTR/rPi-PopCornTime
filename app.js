@@ -8,8 +8,9 @@ var express = require('express')
   , path = require('path')
   , io = require('socket.io').listen(server)
   , spawn = require('child_process').spawn
-  , omx = require('omxcontrol')
- , request = require("request");
+  , omx = require('omxctrl')
+ , request = require("request")
+ , peerflix = require('peerflix');
 
 
 // all environments
@@ -19,7 +20,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(omx());
+//app.use(omx());
 
 //Routes
 app.get('/', function (req, res) {
@@ -101,18 +102,61 @@ socket.on("movieSearch", function(data){
 	    }
 	})
  })
-
+var omxplayer;
+var engine;
 socket.on("movieAPI", function(data){
 		var magnet = '"' + data + '"';
 		console.log(magnet);
-	        //var runShell = new run_shell('peerflix',[magnet,' --vlc']);
-		    var ls = spawn('peerflix', [magnet, '--omx', '--', '-b']);  
-		ls.stdout.on('data', function(data){	
-			console.log(data);
+		engine = peerflix(magnet, {
+			connections: 100,
 		});
-		
-      
+		engine.server.on('listening', function(){
+			console.log('listening');
+			console.log(engine.server.address().port);
+			omx.play('http://raspberrypi.local:' + engine.server.address().port + '/', ['-b']);
+			});
+	   /* omxplayer = spawn('peerflix', [magnet, '--omx', '--', '-b'], {
+			stdio: 'inherit'
+	    })   
+		omxplayer.on('error', (err) => {
+			console.log(err)
+			process.exit(0)
+		})
+		omxplayer.on('exit', (data) => {
+			console.log('Exiting...')
+			//process.exit(0);
+		}) 
+		var engine = torrentStream(magnet);
+		engine.on('ready', function() {
+			engine.files.forEach(function (file){
+				console.log('filename:', file.name);
+				var stream = file.createReadStream();
+				console.log(stream);
+				omx.start(file);
+			});
+		});
+		*/
 	    
+	
+})
+socket.on("stopMovie", function(data){
+		console.log('Stopping movie..');
+		omx.stop();
+	
+})
+socket.on("pauseMovie", function(data){
+		console.log('Pausing movie..');
+		omx.pause();
+	
+})
+socket.on("forwardMovie", function(data){
+		console.log('Pausing movie..');
+		omx.seekFastFoward();
+	
+})
+socket.on("backwardMovie", function(data){
+		console.log('Pausing movie..');
+		omx.seekFastBackward();
 	
 })
 

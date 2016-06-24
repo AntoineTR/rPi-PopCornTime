@@ -29,7 +29,17 @@
           socket.emit('movieSearch', $("#SearchText").val());
 
 		  });
-      
+		//Stop
+      $("#Stop").click(function() {
+          socket.emit('stopMovie');
+
+		  });
+		  //Pause
+      $("#Pause").click(function() {
+		  console.log('pause');
+          socket.emit('pauseMovie');
+
+		  });
       //Api Response to List View
       socket.on('jsonAPIResponse', function(data){
       	jsonConvert(data);
@@ -83,6 +93,16 @@
       </div>
       <div class="col-xs-4">
         <button id="Search" class="btn btn-default"> Search </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <button id="Stop" class="btn btn-default"> Stop </button>
+      </div>
+      <div class="col-xs-4">
+        <button id="Pause" class="btn btn-default"> Pause </button>
+      </div>
+      <div class="col-xs-4">
       </div>
     </div>
   </div>
